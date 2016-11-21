@@ -1,0 +1,27 @@
+.h100 {
+    height: 100vh;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    .main-nav {
+        height: 54px;
+        background-color: @light-cyan;
+        z-index: 12;
+    }
+    .editor {
+        display: flex;
+        flex-grow: 1;
+        .side-panel {
+            width: @side-panel-width;
+            display: flex;
+        }
+        .main-panel {
+            flex-grow: 1;
+            .overlays{
+                position: relative;
+            }
+        }
+    }
+}

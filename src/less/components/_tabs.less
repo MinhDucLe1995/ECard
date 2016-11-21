@@ -1,0 +1,116 @@
+.tabs {
+    background-color: @dark-blue;
+    flex-grow: 1;
+    display: flex;
+    position: relative;
+    .header {
+        background-color: @deep-blue;
+        flex-basis: @tab-header-size;
+        ul {
+            position: absolute;
+            list-style: none;
+            z-index: 1;
+            li {
+                width: @tab-header-size;
+                height: @tab-header-size;
+                display: table;
+                a {
+                    color: @gray;
+                    font-size: 1.5em;
+                    display: table-cell;
+                    vertical-align: middle;
+                    text-align: center;
+                }
+                 :hover {
+                    color: @white;
+                }
+            }
+        }
+        #selectedTab {
+            position: absolute;
+            left: 0;
+            top: 0;
+            z-index: 0;
+            width: @tab-header-size;
+            height: @tab-header-size;
+            background-color: @dark-blue;
+            transition: all 0.3s ease-in-out;
+            span {
+                position: absolute;
+                right: 0;
+                top: -7px;
+                width: 7px;
+                height: 7px;
+                background-color: @dark-blue;
+            }
+            span:after {
+                content: '';
+                position: absolute;
+                right: 0;
+                bottom: 0;
+                width: 14px;
+                height: 14px;
+                border-radius: 7px;
+                background-color: @deep-blue;
+            }
+            span:last-child {
+                top: auto;
+                bottom: -7px;
+            }
+            span:last-child:after {
+                top: 0;
+                bottom: auto
+            }
+        }
+    }
+    .content {
+        flex-grow: 1;
+        flex-shrink: 1;
+        position: relative;
+        overflow: hidden;
+        .tab-page {
+            position: absolute;
+            padding: 15px;
+            left: 0;
+            width: 100%;
+            top: 0;
+            bottom: 0;
+            transition: all 0.3s ease-in-out;
+            h1{
+                color: @white;
+            }
+        }
+    }
+}
+
+@tabs-num : 5;
+.page-active-loop(@page_index, @active_page) when (@page_index >=0) {
+    .tab-page:nth-child(@{page_index}) when (@page_index < @active_page) {
+        transform: translateY(-20%);
+        opacity: 0;
+    }
+    .tab-page:nth-child(@{page_index}) when (@page_index > @active_page) {
+        transform: translateY(20%);
+        opacity: 0;
+    }
+    .page-active-loop(@page_index - 1, @active_page);
+}
+
+.tabs-active-loop(@tab_index) when (@tab_index >=0) {
+    @header_index: 1+@tab_index;
+    .tabs.active-@{tab_index} {
+        #selectedTab {
+            transform: translateY( @tab-header-size * @tab_index );
+        }
+        ul li:nth-child(@{header_index}) a {
+            color: @white;
+        }
+        .page-active-loop(@tabs-num, @header_index);
+        .tab-page:nth-child(@{header_index}) {
+            z-index: 11;
+        }
+    }
+    .tabs-active-loop(@tab_index - 1);
+}
+
+.tabs-active-loop(@tabs-num);
